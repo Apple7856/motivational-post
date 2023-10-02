@@ -1,5 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const ServerConfig = require("./config/environments/server.config");
 
 const app = express();
 dotenv.config();
@@ -11,5 +12,6 @@ app.get("/", (req, res) => {
 
 let port = process.env.PORT || 8000;
 app.listen(port, () => {
+  ServerConfig();
   console.log(`backend server is runing on port ${port}.`);
 });
