@@ -1,5 +1,6 @@
 const db = require("../models");
 const Comment = db.comment;
+const User = db.user;
 
 const createComment = async (req, res) => {
   try {
@@ -12,10 +13,19 @@ const createComment = async (req, res) => {
 
 const getComments = async (req, res) => {
   try {
-    const findComment = await Comment.findAll();
-    res.status(200).send(findComment);
+    const { count, rows } = await Comment.findAndCountAll({
+      where: {
+        postId: req.params.postId,
+      },
+      attributes: ["id", "commentMessage"],
+      include: {
+        model: User,
+        attributes: ["id", "fullName"],
+      },
+    });
+    res.status(200).send({ commentCount: count, data: rows });
   } catch (error) {
-    res.status(409).send({ errors: error.errors[0].message });
+    res.status(409).send({ errors: error });
   }
 };
 

@@ -1,5 +1,6 @@
 const db = require("../models");
 const Post = db.post;
+const User = db.user;
 
 const createPost = async (req, res) => {
   try {
@@ -12,21 +13,36 @@ const createPost = async (req, res) => {
 
 const getPost = async (req, res) => {
   try {
-    const findPost = await Post.findByPk(req.params.id);
+    const findPost = await Post.findOne({
+      where: {
+        id: req.params.id,
+      },
+      attributes: ["title", "desc"],
+      include: {
+        model: User,
+        attributes: ["id", "fullName"],
+      },
+    });
     if (!findPost) return res.status(404).send({ message: "post not exists." });
     res.status(200).send(findPost);
   } catch (error) {
-    res.status(401).send({ errors: error.errors[0].message });
+    res.status(401).send({ errors: error });
   }
 };
 
 const getPosts = async (req, res) => {
   try {
-    const findPost = await Post.findAll();
+    const findPost = await Post.findAndCountAll({
+      attributes: ["id", "title", "desc"],
+      include: {
+        model: User,
+        attributes: ["id", "fullName"],
+      },
+    });
     if (!findPost) return res.status(404).send({ message: "post not exists." });
     res.status(200).send(findPost);
   } catch (error) {
-    res.status(401).send({ errors: error.errors[0].message });
+    res.status(401).send({ errors: error });
   }
 };
 
