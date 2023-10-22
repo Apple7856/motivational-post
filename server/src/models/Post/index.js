@@ -11,12 +11,12 @@ module.exports = (sequelize, DataTypes, Model) => {
         allowNull: false,
       },
       userId: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
       },
     },
     {
       sequelize,
-      modelName: "Post",
+      modelName: "posts",
       timestamps: false,
     }
   );

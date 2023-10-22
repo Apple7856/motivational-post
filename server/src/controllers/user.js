@@ -2,39 +2,65 @@ const db = require("../models");
 const User = db.user;
 
 const createUser = async (req, res) => {
-  const createUser = await User.create({ ...req.body });
-  res.send(createUser);
+  try {
+    const createUser = await User.create({ ...req.body });
+    res.status(201).send(createUser);
+  } catch (error) {
+    res.status(409).send({ errors: error.errors[0].message });
+  }
 };
 
 const getUser = async (req, res) => {
-  const findUser = await User.findByPk(req.params.id);
-  res.send(findUser);
+  try {
+    const findUser = await User.findByPk(req.params.id);
+    if (!findUser) return res.status(404).send({ message: "user not exists." });
+    res.status(200).send(findUser);
+  } catch (error) {
+    res.status(401).send({ errors: error.errors[0].message });
+  }
 };
 
 const getUsers = async (req, res) => {
-  const findUser = await User.findAll();
-  res.send(findUser);
+  try {
+    const findUser = await User.findAll();
+    if (!findUser) return res.status(404).send({ message: "user not exists." });
+    res.status(200).send(findUser);
+  } catch (error) {
+    res.status(401).send({ errors: error.errors[0].message });
+  }
 };
 
 const updateUser = async (req, res) => {
-  const userUpdate = await User.update(
-    { ...req.body },
-    {
-      where: {
-        id: req.params.id,
-      },
-    }
-  );
-  res.send({ data: userUpdate });
+  try {
+    const userUpdate = await User.update(
+      { ...req.body },
+      {
+        where: {
+          id: req.params.id,
+        },
+      }
+    );
+    if (!userUpdate[0])
+      return res.status(404).send({ message: "user not exists." });
+    res.status(202).send({ data: "successfully updated!" });
+  } catch (error) {
+    res.status(401).send({ errors: error.errors[0].message });
+  }
 };
 
 const deleteUser = async (req, res) => {
-  await User.destroy({
-    where: {
-      id: req.params.id,
-    },
-  });
-  res.send("deleted!");
+  try {
+    const userDelete = await User.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+    if (!userDelete)
+      return res.status(404).send({ message: "user not exists." });
+    res.status(200).send("deleted!");
+  } catch (error) {
+    res.status(401).send({ errors: error.errors[0].message });
+  }
 };
 
 module.exports = {

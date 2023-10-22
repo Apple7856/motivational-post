@@ -2,8 +2,8 @@ module.exports = (sequelize, DataTypes) => {
   const Like = sequelize.define(
     "likes",
     {
-      postId: DataTypes.STRING,
-      userId: DataTypes.STRING,
+      postId: DataTypes.INTEGER,
+      userId: DataTypes.INTEGER,
     },
     {
       timestamps: false,

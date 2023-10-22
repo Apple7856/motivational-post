@@ -6,11 +6,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      postId: DataTypes.STRING,
-      userId: DataTypes.STRING,
+      postId: DataTypes.INTEGER,
+      userId: DataTypes.INTEGER,
     },
     {
-      timestamps: false,
+      timestamps: true,
     }
   );
   return Comment;
